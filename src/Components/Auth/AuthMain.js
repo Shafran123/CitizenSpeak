@@ -43,7 +43,7 @@ class AuthMain extends Component {
                             New here ?
                             </Text>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=> this.props.navigation.navigate('SignUp')}> 
                             <Text style={styles.txtSignup}>
                                 Sign up
                             </Text>

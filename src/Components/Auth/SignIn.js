@@ -71,7 +71,7 @@ class SignIn extends Component {
                             </Text>
 
                         <TouchableOpacity onPress={() => {
-                            this.props.navigation.navigate('SignIn')
+                            this.props.navigation.navigate('SignUp')
                         }}>
                             <Text style={styles.txtSignup}>
                                 Sign up
