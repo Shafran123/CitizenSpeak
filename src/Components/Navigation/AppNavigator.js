@@ -7,7 +7,8 @@ import SignIn from '../Auth/SignIn'
 import SignUp from '../Auth/SignUp'
 import SignUpDetail from '../Auth/SignUpDetail'
 
-
+//Guide
+import Guide from '../Guide/Guide'
 
 import Home from '../Home/Home'
 
@@ -19,7 +20,7 @@ const AuthStack = createStackNavigator({
   SignUpDetail
 },
   {
-    defaultNavigationOptions:{
+    defaultNavigationOptions: {
       headerStyle: {
         shadowColor: 'transparent',
         borderBottomWidth: 0,
@@ -28,6 +29,20 @@ const AuthStack = createStackNavigator({
     }
   })
 
+
+const GuideStack = createStackNavigator({
+  Guide,
+  
+},
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        shadowColor: 'transparent',
+        borderBottomWidth: 0,
+        elevation: 0,
+      },
+    }
+  })
 
 const AppStack = createStackNavigator({
   //Screen Here
@@ -49,8 +64,9 @@ const AppStack = createStackNavigator({
 export default createAppContainer(
   createSwitchNavigator(
     {
-      Auth : AuthStack,
-      App: AppStack
+      Auth: AuthStack,
+      App: AppStack,
+      Guide : GuideStack
     },
 
     {

@@ -82,7 +82,7 @@ class SignUpDetail extends Component {
 
                         <View style={styles.bottomContainer}>
                         <Button full style={styles.btnSignIN} onPress={()=>{
-                            this.props.navigation.navigate('SignUpDetail')
+                            this.props.navigation.navigate('Guide')
                         }}>
                             <Text style={styles.txtSignIn}>Done</Text>
                         </Button>
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     viewHeader: {
         //  borderColor:  'green',
         //   borderWidth : 1,
-        marginLeft: 10,
+        marginLeft: 15,
 
     },
     txtName: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 30
     },
     viewSubHeader: {
-        marginLeft: 10,
+        marginLeft: 15,
     },
     txtSubHead: {
         //  borderColor: 'red',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         // borderColor:  'green',
         // borderWidth : 1,
     }, mainView: {
-        marginTop: 40,
+        marginTop: 50,
         // borderColor: 'red',
         // borderWidth: 1,
         flexDirection: 'row',
