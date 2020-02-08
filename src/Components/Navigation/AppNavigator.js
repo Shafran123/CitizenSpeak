@@ -11,12 +11,11 @@ const AppStack = createStackNavigator({
   }, {
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: 'white',
         shadowColor: 'transparent',
         borderBottomWidth: 0,
         elevation: 0,
       },
-      headerTintColor: '#007aff',
+
     },
   });
 
