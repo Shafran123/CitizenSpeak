@@ -1,26 +1,34 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, Dimensions } from 'react-native'
-import { Text, Button } from 'native-base'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, StyleSheet, Image, Dimensions , KeyboardAvoidingView} from 'react-native'
+import { Form, Text, Button, Input, Item } from 'native-base'
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 
 const { height, width } = Dimensions.get('window');
 
-class AuthMain extends Component {
 
-  
-    static navigationOptions = ({navigation})=>{
-        return{
+
+class SignIn extends Component {
+
+    static navigationOptions = ({ navigation }) => {
+        return {
             headerShown: false
         }
-  
-        
-     
+
+
+
     };
 
     render() {
+     
         return (
             <View style={styles.mainContainer}>
+               
+                <KeyboardAvoidingView style={styles.mainContainer} 
+                behavior={height < 700 ?  "position" : 'padding'} 
+                >
+
+
                 <View style={styles.imgView}>
                     <Image
                         source={require('../../../images/logo.png')}
@@ -30,11 +38,30 @@ class AuthMain extends Component {
 
                 </View>
                 <View style={styles.txtHelloView}>
-                    <Text style={styles.txtHello}>Hello!</Text>
+                    <Text style={styles.txtHello}>Sign In</Text>
                 </View>
 
+                <View>
+                    <View style={styles.emailView}>
+                        <Item regular style={styles.inputItem}>
+                            <Input style={styles.inputEmail} placeholder='Email Address' />
+                        </Item>
+                    </View>
+
+                   <View  style={styles.pwView}>
+                        <Item regular style={styles.inputItem}>
+                            <Input style={styles.inputEmail} placeholder='Password' secureTextEntry={true} />
+                        </Item>
+                   </View>
+
+                   
+                </View>
+
+
+
+
                 <View style={styles.bottomContainer}>
-                    <Button  onPress={() => this.props.navigation.navigate('SignIn')} full style={styles.btnSignIN}>
+                    <Button full style={styles.btnSignIN}>
                         <Text style={styles.txtSignIn}>Sign In</Text>
                     </Button>
 
@@ -43,7 +70,9 @@ class AuthMain extends Component {
                             New here ?
                             </Text>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.props.navigation.navigate('SignIn')
+                        }}>
                             <Text style={styles.txtSignup}>
                                 Sign up
                             </Text>
@@ -56,6 +85,9 @@ class AuthMain extends Component {
                     </View>
 
                 </View>
+
+                </KeyboardAvoidingView>
+            
             </View>
 
         )
@@ -84,17 +116,15 @@ const styles = StyleSheet.create({
         fontWeight: '500'
     },
     txtHelloView: {
-        // marginTop : 20,
-        // borderColor : 'red',
+        marginBottom :10,
+       //  borderColor : 'red',
         //borderWidth : 1,
         alignSelf: 'center',
         justifyContent: 'center'
     },
     txtHello: {
         color: '#464646',
-        fontSize: 60,
-        marginTop: 20,
-        marginBottom: 20,
+        fontSize: 24,
         textAlign: 'center',
         fontWeight: 'bold',
 
@@ -120,7 +150,7 @@ const styles = StyleSheet.create({
     signupHintView: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom: 40,
+        marginBottom: 30,
     },
     txtNewHere: {
         color: '#464646',
@@ -137,7 +167,24 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         fontSize: 12
+    },
+    emailView:{
+        marginBottom : 20
+    },
+    pwView:{
+        marginBottom : 20
+    },
+    inputItem: {
+        marginLeft: 40,
+        marginRight: 40,
+        borderRadius: 10,
+    },
+    inputEmail: {
+        fontSize: 14,
+        borderColor: '#464646',
+        //borderWidth: 1,
+        //borderRadius : 10,
     }
 })
 
-export default AuthMain
+export default SignIn

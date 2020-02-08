@@ -3,13 +3,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 //Auth
 import AuthMain from '../Auth/AuthMain'
-
+import SignIn from '../Auth/SignIn'
 
 import Home from '../Home/Home'
 
 
 const AuthStack = createStackNavigator({
-  AuthMain
+  AuthMain,
+  SignIn
 },
   {
     defaultNavigationOptions:{
