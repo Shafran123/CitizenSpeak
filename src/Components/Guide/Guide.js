@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
 
     },
     txtName: {
+        color: '#464646',
         fontWeight: '700',
         fontSize: (width < 350 ? 24 : 30)
     },
