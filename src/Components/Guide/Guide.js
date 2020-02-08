@@ -74,7 +74,7 @@ class Guide extends Component {
 
                 <View style={styles.bottomContainer}>
                     <Button full style={styles.btnSignIN} onPress={() => {
-                        this.props.navigation.navigate('Guide')
+                        this.props.navigation.navigate('Home')
                     }}>
                         <Text style={styles.txtSignIn}>Got It</Text>
                     </Button>
