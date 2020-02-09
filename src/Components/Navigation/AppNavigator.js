@@ -11,6 +11,7 @@ import SignUpDetail from '../Auth/SignUpDetail'
 import Guide from '../Guide/Guide'
 
 import Home from '../Home/Home'
+import CreateTopic from '../Home/CreateTopic'
 
 
 const AuthStack = createStackNavigator({
@@ -46,7 +47,8 @@ const GuideStack = createStackNavigator({
 
 const AppStack = createStackNavigator({
   //Screen Here
-  Home
+  Home,
+  CreateTopic
 
 }, {
   defaultNavigationOptions: {
