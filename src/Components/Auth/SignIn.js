@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, StyleSheet, Image, Dimensions , KeyboardAvoidingView} from 'react-native'
 import { Form, Text, Button, Input, Item } from 'native-base'
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -6,9 +7,21 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 const { height, width } = Dimensions.get('window');
 
-
+import { userLogin } from '../../action';
+ 
 
 class SignIn extends Component {
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          email: null,
+          password : ''
+         
+        };
+      }
+
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -19,8 +32,13 @@ class SignIn extends Component {
 
     };
 
+    componentDidMount(){
+        console.log(this.props , 'Props')
+    }
+
     render() {
-     
+        console.log(this.state.email , 'EMAIL')
+        console.log(this.state.password.length)
         return (
             <View style={styles.mainContainer}>
                
@@ -44,13 +62,21 @@ class SignIn extends Component {
                 <View>
                     <View style={styles.emailView}>
                         <Item regular style={styles.inputItem}>
-                            <Input style={styles.inputEmail} placeholder='Email Address' />
+                            <Input onChangeText={email=>{
+                                this.setState({
+                                    email : email
+                                })
+                            }} style={styles.inputEmail} placeholder='Email Address' />
                         </Item>
                     </View>
 
                    <View  style={styles.pwView}>
                         <Item regular style={styles.inputItem}>
-                            <Input style={styles.inputEmail} placeholder='Password' secureTextEntry={true} />
+                            <Input onChangeText={password=>{
+                                this.setState({
+                                    password : password
+                                })
+                            }} style={styles.inputEmail} placeholder='Password' secureTextEntry={true} />
                         </Item>
                    </View>
 
@@ -61,7 +87,15 @@ class SignIn extends Component {
 
 
                 <View style={styles.bottomContainer}>
-                    <Button full style={styles.btnSignIN}>
+                    <Button
+                         onPress={()=>{
+                        this.props.userLogin(this.state.email , this.state.password)
+                         }} 
+                        full 
+                        disabled={!this.state.email || (this.state.password.length < 6)}
+                        style={ (!this.state.email || this.state.password.length < 6) ?  styles.btnSignINDisable : styles.btnSignIN}
+                      
+                        >
                         <Text style={styles.txtSignIn}>Sign In</Text>
                     </Button>
 
@@ -140,7 +174,13 @@ const styles = StyleSheet.create({
         marginRight: 40,
         marginBottom: 10,
         backgroundColor: '#FDD62B',
-
+    },
+    btnSignINDisable: {
+        borderRadius: 10,
+        marginLeft: 40,
+        marginRight: 40,
+        marginBottom: 10,
+        backgroundColor: '#b5b5b5',
     },
     txtSignIn: {
         fontSize: 20,
@@ -187,4 +227,12 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SignIn
+
+const mapStateToProps = state => {
+    return {
+      login : state.user.userLogin
+    };
+};
+
+export default connect(mapStateToProps, {userLogin})(SignIn);
+

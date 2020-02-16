@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet, Image, Dimensions, FlatList } from 'react-native'
 import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 const { height, width } = Dimensions.get('window');
@@ -139,7 +140,7 @@ class Home extends Component {
               <Text style={styles.txtInProgress}>Wanna Make Sri Lanka Better Place?</Text>
               <Text style={styles.hintTxt}>Submit your idea and discuss with community SriLankan Government will review your idea.</Text>
               <Button full style={styles.btnStartTopic} onPress={() => {
-                this.props.navigation.navigate('CreateTopic')
+                AsyncStorage.clear();
               }}>
                 <Text style={styles.txtStartTopic}>Start a topic</Text>
               </Button>

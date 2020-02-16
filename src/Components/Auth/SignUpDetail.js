@@ -16,7 +16,12 @@ class SignUpDetail extends Component {
 
     };
 
+    componentDidMount(){
+      
+    }
+
     render() {
+        const name = this.props.navigation.getParam('name', null);
         return (
             <View style={styles.container}>
 
@@ -25,7 +30,7 @@ class SignUpDetail extends Component {
 
                     <View style={styles.leftView}>
                         <View style={styles.viewHeader}>
-                            <Text style={styles.txtName}>Hi , Shafran</Text>
+                            <Text style={styles.txtName}>Hi , {name}</Text>
                         </View>
 
                         <View style={styles.viewSubHeader}>

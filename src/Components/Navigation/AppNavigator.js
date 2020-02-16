@@ -1,6 +1,8 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
+import AuthLoading from '../Auth/AuthLoading'
+
 //Auth
 import AuthMain from '../Auth/AuthMain'
 import SignIn from '../Auth/SignIn'
@@ -66,13 +68,14 @@ const AppStack = createStackNavigator({
 export default createAppContainer(
   createSwitchNavigator(
     {
+      AuthLoading,
       Auth: AuthStack,
       App: AppStack,
       Guide : GuideStack
     },
 
     {
-      initialRouteName: 'Auth'
+      initialRouteName: 'AuthLoading'
     }
   )
 );

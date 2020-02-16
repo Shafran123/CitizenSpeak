@@ -1,14 +1,34 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, StyleSheet, Image, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { Form, Text, Button, Input, Item } from 'native-base'
+import { MaterialIndicator } from 'react-native-indicators';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import Modal from 'react-native-modalbox';
+
 
 
 const { height, width } = Dimensions.get('window');
 
+import { createUser } from '../../action';
+
 
 
 class SignUp extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            name: null,
+            email: null,
+            password: '',
+            error: false,
+            loding: false
+
+        };
+    }
+
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -18,6 +38,32 @@ class SignUp extends Component {
 
 
     };
+
+    renderErrorModal = () => {
+        return (
+
+            <Modal
+                style={{
+                    height: 60,
+                    backgroundColor: 'red',
+                }}
+                position={'bottom'}
+                entry={'bottom'}
+                isOpen={this.state.error}
+                backdrop={true}
+                backdropOpacity={0}
+                backdropPressToClose={true}
+                >
+
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={{ textAlign: 'center', color: 'white', fontWeight: '600' , fontSize : 12 }}>{this.props.signUpErr}</Text>
+                </View>
+
+            </Modal>
+        )
+
+    }
+
 
     render() {
 
@@ -45,23 +91,34 @@ class SignUp extends Component {
 
                         <View style={styles.emailView}>
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputEmail} placeholder='Name' />
+                                <Input onChangeText={name => {
+                                    this.setState({
+                                        name: name
+                                    })
+                                }} style={styles.inputEmail} placeholder='Name' />
                             </Item>
                         </View>
 
 
                         <View style={styles.emailView}>
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputEmail} placeholder='Email Address' />
+                                <Input onChangeText={email => {
+                                    this.setState({
+                                        email: email
+                                    })
+                                }} style={styles.inputEmail} placeholder='Email Address' />
                             </Item>
                         </View>
 
                         <View style={styles.pwView}>
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputEmail} placeholder='Password' secureTextEntry={true} />
+                                <Input onChangeText={password => {
+                                    this.setState({
+                                        password: password
+                                    })
+                                }} style={styles.inputEmail} placeholder='Password' secureTextEntry={true} />
                             </Item>
                         </View>
-
 
                     </View>
 
@@ -69,10 +126,39 @@ class SignUp extends Component {
 
 
                     <View style={styles.bottomContainer}>
-                        <Button full style={styles.btnSignIN} onPress={()=>{
-                            this.props.navigation.navigate('SignUpDetail')
-                        }}>
-                            <Text style={styles.txtSignIn}>Next</Text>
+                        <Button disabled={!this.state.email || !this.state.name || this.state.password.length < 6}
+                            full
+                            style={(!this.state.email || !this.state.name || this.state.password.length < 6) ? styles.btnSignINDisable : styles.btnSignIN}
+                            onPress={() => {
+                                this.setState({
+                                    loding : true,
+                                    error: false
+                                })
+                                this.props.createUser(this.state.email, this.state.password, (res , err) => {
+                                    if(res){
+                                        console.log('User Created')
+                                        this.props.navigation.navigate('SignUpDetail', { name: this.state.name })
+                                        this.setState({
+                                            loding : false
+                                        })
+                                    }else{
+                                        console.log('Error')
+                                        this.setState({
+                                            loding :false,
+                                            error: true
+                                        })
+                                    }
+                                
+                                })
+                            }}>
+                            {this.state.loding ? (
+                                <MaterialIndicator
+                                    color="white"
+                                    size={25}
+                                    trackWidth={2}
+                                />
+                            ) : <Text style={styles.txtSignIn}>Next</Text>}
+                            
                         </Button>
 
                         <View style={styles.signupHintView}>
@@ -80,8 +166,10 @@ class SignUp extends Component {
                                 New here ?
                             </Text>
 
-                            <TouchableOpacity onPress={()=>{
-                                this.props.navigation.navigate('SignIn')
+                            <TouchableOpacity onPress={() => {
+                                this.setState({
+                                    error: true
+                                })
                             }}>
                                 <Text style={styles.txtSignup}>
                                     Sign In
@@ -94,9 +182,16 @@ class SignUp extends Component {
                             <Text style={styles.txtRights}>All Right Reserved By Citizen Speak</Text>
                         </View>
 
+
+
                     </View>
 
+
+
                 </KeyboardAvoidingView>
+
+                {this.renderErrorModal()}
+
 
             </View>
 
@@ -152,6 +247,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#FDD62B',
 
     },
+    btnSignINDisable: {
+        borderRadius: 10,
+        marginLeft: 40,
+        marginRight: 40,
+        marginBottom: 10,
+        backgroundColor: '#b5b5b5',
+    },
     txtSignIn: {
         fontSize: 20,
         fontWeight: '700',
@@ -197,4 +299,11 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SignUp
+const mapStateToProps = state => {
+    return {
+        login: state.user.userLogin,
+        signUpErr : state.user.signUperr
+    };
+};
+
+export default connect(mapStateToProps, { createUser })(SignUp);
