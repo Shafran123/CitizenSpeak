@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, StyleSheet, Image, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { Text, Item, Input, Textarea , Button } from 'native-base'
+import { MaterialIndicator } from 'react-native-indicators';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const { height, width } = Dimensions.get('window');
+
+import { saveUserData } from '../../action';
+
 
 class SignUpDetail extends Component {
 
@@ -15,6 +20,21 @@ class SignUpDetail extends Component {
 
 
     };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            fullName: null,
+            jobRole: null,
+            company: null,
+            city: null,
+            bio: null,
+            loader : false,
+            error: false
+
+        };
+    }
 
     componentDidMount(){
       
@@ -60,23 +80,50 @@ class SignUpDetail extends Component {
                     <View>
                         <View style={styles.viewdetailform}>
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputTxt} placeholder='Name*' />
+                                <Input onChangeText={fullName=>{
+                                    this.setState({
+                                        fullName : fullName
+                                    })
+                                }} style={styles.inputTxt} placeholder='Name*' />
                             </Item>
 
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputTxt} placeholder='Job Role*' />
+                                <Input 
+                                onChangeText={jobRole=>{
+                                    this.setState({
+                                        jobRole : jobRole
+                                    })
+                                }}
+                                style={styles.inputTxt} placeholder='Job Role*' />
                             </Item>
 
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputTxt} placeholder='Organization / Company*' />
+                                <Input 
+                                onChangeText={company=>{
+                                    this.setState({
+                                        company : company
+                                    })
+                                }}
+                                style={styles.inputTxt} placeholder='Organization / Company*' />
                             </Item>
 
                             <Item regular style={styles.inputItem}>
-                                <Input style={styles.inputTxt} placeholder='City*' />
+                                <Input
+                                onChangeText={city=>{
+                                    this.setState({
+                                        city : city
+                                    })
+                                }}
+                                style={styles.inputTxt} placeholder='City*' />
                             </Item>
 
                             <Item regular style={styles.inputItem}>
-                                <Textarea blurOnSubmit={true} multiline={true} rowSpan={10} style={styles.txtBio} placeholder='Bio*' />
+                                <Textarea 
+                                onChangeText={bio=>{
+                                    this.setState({
+                                        bio : bio
+                                    })
+                                }} blurOnSubmit={true} multiline={true} rowSpan={10} style={styles.txtBio} placeholder='Bio*' />
                             </Item>
 
 
@@ -86,10 +133,37 @@ class SignUpDetail extends Component {
 
 
                         <View style={styles.bottomContainer}>
-                        <Button full style={styles.btnSignIN} onPress={()=>{
-                            this.props.navigation.navigate('Guide')
+                        <Button full style={ (!this.state.fullName || !this.state.jobRole || !this.state.company || !this.state.city || !this.state.bio) ? styles.btnSignINDisable : styles.btnSignIN}
+                        disabled={!this.state.fullName || !this.state.jobRole || !this.state.company || !this.state.city || !this.state.bio}
+                        onPress={()=>{
+                            this.setState({
+                                loader : true,
+                                error : false
+                            })
+                            this.props.saveUserData(this.state.fullName , this.state.jobRole , this.state.company , this.state.city , this.state.bio , (res , err)=>{
+                                if(res){
+                                    this.props.navigation.navigate('Guide')
+                                    this.setState({
+                                        loader : false
+                                    })
+                                }else{
+                                    this.setState({
+                                        error : true
+                                    })
+                                }
+                                
+                            })
+                           
                         }}>
-                            <Text style={styles.txtSignIn}>Done</Text>
+                          {this.state.loader ? (
+                               <MaterialIndicator
+                               color="white"
+                               size={25}
+                               trackWidth={2}
+                           />
+                          ) : 
+                          <Text style={styles.txtSignIn}>Done</Text>
+                          }   
                         </Button>
 
                         <View>
@@ -198,7 +272,22 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 12
     },
+    btnSignINDisable: {
+        borderRadius: 10,
+        marginLeft: 40,
+        marginRight: 40,
+        marginBottom: 10,
+        backgroundColor: '#b5b5b5',
+    },
 
 })
 
-export default SignUpDetail
+
+const mapStateToProps = state => {
+    return {
+        login: state.user.userLogin,
+        
+    };
+};
+
+export default connect(mapStateToProps, { saveUserData })(SignUpDetail);

@@ -10,7 +10,7 @@ import Modal from 'react-native-modalbox';
 
 const { height, width } = Dimensions.get('window');
 
-import { createUser } from '../../action';
+import { createUser , saveUserData } from '../../action';
 
 
 
@@ -167,9 +167,7 @@ class SignUp extends Component {
                             </Text>
 
                             <TouchableOpacity onPress={() => {
-                                this.setState({
-                                    error: true
-                                })
+                               this.props.navigation.navigate('SignIn')
                             }}>
                                 <Text style={styles.txtSignup}>
                                     Sign In
@@ -306,4 +304,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { createUser })(SignUp);
+export default connect(mapStateToProps, { createUser , saveUserData })(SignUp);
