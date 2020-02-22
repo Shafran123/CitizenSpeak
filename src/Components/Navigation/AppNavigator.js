@@ -14,6 +14,7 @@ import Guide from '../Guide/Guide'
 
 import Home from '../Home/Home'
 import CreateTopic from '../Home/CreateTopic'
+import EmailSent from '../Home/EmailSent'
 
 
 const AuthStack = createStackNavigator({
@@ -49,9 +50,10 @@ const GuideStack = createStackNavigator({
 
 const AppStack = createStackNavigator({
   //Screen Here
-  Home,
-  CreateTopic
 
+  Home,
+  CreateTopic,
+  EmailSent,
 }, {
   defaultNavigationOptions: {
     headerStyle: {

@@ -166,7 +166,7 @@ class CreateTopic extends Component {
                                             this.setState({
                                                 loader: false
                                             })
-                                            this.props.navigation.navigate('Guide')
+                                            this.props.navigation.navigate('EmailSent')
                                         }else{
                                             this.setState({
                                                 loader: false,
