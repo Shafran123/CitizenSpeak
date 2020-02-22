@@ -1,8 +1,14 @@
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, StyleSheet, Image, Dimensions, FlatList, KeyboardAvoidingView } from 'react-native'
 import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'native-base'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { MaterialIndicator } from 'react-native-indicators';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
+import { createTopic } from '../../action';
 
 
 const { height, width } = Dimensions.get('window');
@@ -11,6 +17,21 @@ const data = ['1', '2']
 
 class CreateTopic extends Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            title: null,
+            category: null,
+            impact_level: null,
+            desc_issue: null,
+            desc_idea: null,
+            loader:false
+
+
+
+        };
+    }
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -59,23 +80,43 @@ class CreateTopic extends Component {
                         <View>
                             <View style={styles.viewdetailform}>
                                 <Item regular style={styles.inputItem}>
-                                    <Input style={styles.inputTxt} placeholder='Title*' />
+                                    <Input onChangeText={title=>{
+                                        this.setState({
+                                            title: title
+                                        })
+                                    }} style={styles.inputTxt} placeholder='Title*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Input style={styles.inputTxt} placeholder='Category*' />
+                                    <Input onChangeText={category=>{
+                                        this.setState({
+                                            category : category
+                                        })
+                                    }} style={styles.inputTxt} placeholder='Category*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Input style={styles.inputTxt} placeholder='Imapct Level*' />
+                                    <Input onChangeText={impact_lvl=>{
+                                        this.setState({
+                                            impact_level : impact_lvl
+                                        })
+                                    }} style={styles.inputTxt} placeholder='Imapct Level*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Textarea blurOnSubmit={true} multiline={true} rowSpan={10} style={styles.txtBio} placeholder='Issue Descrption*' />
+                                    <Textarea onChangeText={desc_issue=>{
+                                        this.setState({
+                                            desc_issue : desc_issue
+                                        })
+                                    }} blurOnSubmit={true} multiline={true} rowSpan={10} style={styles.txtBio} placeholder='Issue Descrption*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Textarea blurOnSubmit={true} multiline={true} rowSpan={15} style={styles.txtBio} placeholder='Your Idea..*' />
+                                    <Textarea onChangeText={desc_idea=>{
+                                        this.setState({
+                                            desc_idea : desc_idea
+                                        })
+                                    }} blurOnSubmit={true} multiline={true} rowSpan={15} style={styles.txtBio} placeholder='Your Idea..*' />
                                 </Item>
 
 
@@ -109,15 +150,43 @@ class CreateTopic extends Component {
 
                             <View style={styles.bottomContainer}>
                                 <Button full style={styles.btnSaveDraft} onPress={() => {
-                                    this.props.navigation.navigate('Guide')
+                                    //this.props.navigation.navigate('Guide')
+                                    AsyncStorage.clear();
                                 }}>
                                     <Text style={styles.txtSignIn}>Save Draft</Text>
                                 </Button>
 
-                                <Button full style={styles.btnSubmit} onPress={() => {
-                                    this.props.navigation.navigate('Guide')
+                                <Button disabled={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea} full style={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea? styles.btnSubmitDisable : styles.btnSubmit} onPress={() => {
+                                    this.setState({
+                                        loader : true
+                                    })
+                                    this.props.createTopic(this.state.title , this.state.category , this.state.impact_level , this.state.desc_issue , this.state.desc_idea , (res, err)=>{
+                                     
+                                        if(res){
+                                            this.setState({
+                                                loader: false
+                                            })
+                                            this.props.navigation.navigate('Guide')
+                                        }else{
+                                            this.setState({
+                                                loader: false,
+                                            })
+                                            console.log('Error')
+                                        }
+                                       
+                                    })
                                 }}>
-                                    <Text style={styles.txtSignIn}>Submit</Text>
+                                   {this.state.loader ? 
+                                   <MaterialIndicator
+                                   color="white"
+                                   size={25}
+                                   trackWidth={2}
+                               /> : 
+                               
+                               <Text style={styles.txtSignIn}>Submit</Text>
+                               }
+
+                                   
                                 </Button>
                             </View>
 
@@ -343,6 +412,14 @@ const styles = StyleSheet.create({
        marginRight :40,
         marginBottom: 10,
         backgroundColor: '#FDD62B',
+    },
+    btnSubmitDisable: {
+        width : width * 0.35,
+        borderRadius: 10,
+       //marginLeft :40,
+       marginRight :40,
+        marginBottom: 10,
+        backgroundColor: 'grey',
 
     },
     txtSignIn: {
@@ -367,4 +444,11 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CreateTopic;
+const mapStateToProps = state => {
+    return {
+        login: state.user.userLogin,
+        signInErr : state.user.signUperr
+    };
+};
+
+export default connect(mapStateToProps, { createTopic })(CreateTopic);

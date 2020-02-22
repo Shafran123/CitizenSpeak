@@ -140,7 +140,8 @@ class Home extends Component {
               <Text style={styles.txtInProgress}>Wanna Make Sri Lanka Better Place?</Text>
               <Text style={styles.hintTxt}>Submit your idea and discuss with community SriLankan Government will review your idea.</Text>
               <Button full style={styles.btnStartTopic} onPress={() => {
-                AsyncStorage.clear();
+                //AsyncStorage.clear();
+                this.props.navigation.navigate('CreateTopic')
               }}>
                 <Text style={styles.txtStartTopic}>Start a topic</Text>
               </Button>
