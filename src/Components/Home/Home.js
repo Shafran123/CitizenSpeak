@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Image, Dimensions, FlatList } from 'react-native'
 import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'native-base'
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux'
 import { MaterialIndicator } from 'react-native-indicators';
@@ -38,6 +38,19 @@ class Home extends Component {
 
   };
 
+  openDrawerMenu(){
+    this.props.navigation.openDrawer()
+  }
+
+  closeDrawer() {
+    this.drawer._root.close()
+}
+
+
+  openDrawer() {
+    this.drawer._root.open()
+}
+
   componentDidMount() {
     this.setState({
       loaderTrending: true,
@@ -67,10 +80,15 @@ class Home extends Component {
 
           <View style={styles.leftView}>
             <View style={styles.viewHeader}>
+              <TouchableOpacity onPress={()=>{
+                this.openDrawerMenu()
+              }}>
               <Image
                 source={require('../../../images/icons/menu.png')}
                 style={styles.menu}
               />
+              </TouchableOpacity>
+             
             </View>
           </View>
 

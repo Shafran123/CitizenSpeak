@@ -510,6 +510,8 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.5.6):
     - React
+  - RNReanimated (1.7.0):
+    - React
   - RNScreens (2.0.0-beta.2):
     - React
   - Yoga (1.14.0)
@@ -549,6 +551,7 @@ DEPENDENCIES:
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -639,6 +642,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -697,6 +702,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 9c6a6ad1435eeff2aca7bbb335123e25b5781e65
   RNFBFirestore: c03f496b934c498fea94f17b739c6dcb2309f8cc
   RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
+  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: 5e4758109c6d35f9a009ce72af873df907548020
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 

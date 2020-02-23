@@ -1,5 +1,7 @@
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer'
+
 
 import AuthLoading from '../Auth/AuthLoading'
 
@@ -16,6 +18,8 @@ import Home from '../Home/Home'
 import CreateTopic from '../Home/CreateTopic'
 import EmailSent from '../Home/EmailSent'
 import Draft from '../Home/Draft'
+
+import DrawerMenu from '../Home/DrawerMenu'
 
 
 const AuthStack = createStackNavigator({
@@ -51,8 +55,6 @@ const GuideStack = createStackNavigator({
 
 const AppStack = createStackNavigator({
   //Screen Here
-
-  Home,
   CreateTopic,
   EmailSent,
   Draft
@@ -67,12 +69,21 @@ const AppStack = createStackNavigator({
   },
 });
 
+const DrawerStack = createDrawerNavigator({
+  Home,
+  
+},
+
+  {
+    contentComponent: DrawerMenu
+  })
 
 
 export default createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading,
+      Home: DrawerStack,
       Auth: AuthStack,
       App: AppStack,
       Guide : GuideStack
