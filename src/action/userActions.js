@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-import { USER_LOGIN_SUCESS, USER_SIGNUP_FAIL } from '../action/config'
+import { USER_LOGIN_SUCESS, USER_SIGNUP_FAIL , FETCH_TRENDING_SUCESS , FETCH_DEV_TOPIC_SUCESS} from '../action/config'
 
 var dbUsers = firestore().collection('Users')
 
@@ -67,22 +67,65 @@ export const saveUserData = (fullName , jobRole , company , city , bio , callbac
 }
 
 
-export const createTopic = (title,category , impact_level , desc_issue , desc_idea , callback) => async dispatch =>{
+export const createTopic = (title,category , impact_level , desc_issue , desc_idea,status , callback) => async dispatch =>{
 
   const authToken = await firebase.auth().currentUser.getIdToken();
   const user = firebase.auth().currentUser;
 
   const userId = user.uid
-  const hello='hello'
+  const userEmail = user.email
   //console.log(authToken)
 
-    axios.post(`https://27ee5229.ngrok.io/firebase/add-idea`,{ title ,category , impact_level , desc_issue ,desc_idea , userId} ,{headers: { authorization: `Bearer ${authToken}` }})
+    axios.post(`https://5fe62453.ngrok.io/firebase/add-idea`,{ title ,category , impact_level , desc_issue ,desc_idea , userId , status, userEmail} ,{headers: { authorization: `Bearer ${authToken}` }})
     .then((res)=>{
       console.log(res.data)
-      callback(res, null)
+      callback(res.data, null)
     }).catch((err)=>{
       console.log(err)
       callback(null , err)
     })
+
+}
+
+export const saveAsDraft = (title ,category , impact_level , desc_issue ,desc_idea  , status, callback) => async dispatch=>{
+  const authToken = await firebase.auth().currentUser.getIdToken();
+  const user = firebase.auth().currentUser;
+  const userId = user.uid
+
+  axios.post(`https://5fe62453.ngrok.io/firebase/save-draft` , {title,category , impact_level , desc_issue , desc_idea, userId,status},{headers: { authorization: `Bearer ${authToken}` }})
+  .then((res)=>{
+    callback(res.data , null)
+  }).catch(err=>{
+    callback(null , err)
+  })
+
+}
+
+export const getTrendingTopics = (callback) =>async dispatch=>{
+  const authToken = await firebase.auth().currentUser.getIdToken();
+  const user = firebase.auth().currentUser;
+  axios.post(`https://5fe62453.ngrok.io/firebase/fetch-trending-ideas` , {},{headers: { authorization: `Bearer ${authToken}` }})
+  .then((res)=>{
+    console.log(res.data.data)
+    dispatch({ type: FETCH_TRENDING_SUCESS, payload: res.data.data })
+    callback(res.data , null)
+  }).catch(err=>{
+    callback(null , err)
+  })
+
+}
+
+export const getDevTopics = (callback) => async dispatch =>{
+  const authToken = await firebase.auth().currentUser.getIdToken();
+  const user = firebase.auth().currentUser;
+
+  axios.post(`https://5fe62453.ngrok.io/firebase/fetch-dev-topics` , {},{headers: { authorization: `Bearer ${authToken}` }})
+  .then((res)=>{
+    console.log(res.data.data)
+    dispatch({ type: FETCH_DEV_TOPIC_SUCESS, payload: res.data.data })
+    callback(res.data , null)
+  }).catch(err=>{
+    callback(null , err)
+  })  
 
 }

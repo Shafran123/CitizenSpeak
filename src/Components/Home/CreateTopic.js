@@ -8,7 +8,7 @@ import { MaterialIndicator } from 'react-native-indicators';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-import { createTopic } from '../../action';
+import { createTopic, saveAsDraft } from '../../action';
 
 
 const { height, width } = Dimensions.get('window');
@@ -26,7 +26,8 @@ class CreateTopic extends Component {
             impact_level: null,
             desc_issue: null,
             desc_idea: null,
-            loader:false
+            loader: false,
+            loaderDraft: false
 
 
 
@@ -80,7 +81,7 @@ class CreateTopic extends Component {
                         <View>
                             <View style={styles.viewdetailform}>
                                 <Item regular style={styles.inputItem}>
-                                    <Input onChangeText={title=>{
+                                    <Input onChangeText={title => {
                                         this.setState({
                                             title: title
                                         })
@@ -88,33 +89,33 @@ class CreateTopic extends Component {
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Input onChangeText={category=>{
+                                    <Input onChangeText={category => {
                                         this.setState({
-                                            category : category
+                                            category: category
                                         })
                                     }} style={styles.inputTxt} placeholder='Category*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Input onChangeText={impact_lvl=>{
+                                    <Input onChangeText={impact_lvl => {
                                         this.setState({
-                                            impact_level : impact_lvl
+                                            impact_level: impact_lvl
                                         })
                                     }} style={styles.inputTxt} placeholder='Imapct Level*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Textarea onChangeText={desc_issue=>{
+                                    <Textarea onChangeText={desc_issue => {
                                         this.setState({
-                                            desc_issue : desc_issue
+                                            desc_issue: desc_issue
                                         })
                                     }} blurOnSubmit={true} multiline={true} rowSpan={10} style={styles.txtBio} placeholder='Issue Descrption*' />
                                 </Item>
 
                                 <Item regular style={styles.inputItem}>
-                                    <Textarea onChangeText={desc_idea=>{
+                                    <Textarea onChangeText={desc_idea => {
                                         this.setState({
-                                            desc_idea : desc_idea
+                                            desc_idea: desc_idea
                                         })
                                     }} blurOnSubmit={true} multiline={true} rowSpan={15} style={styles.txtBio} placeholder='Your Idea..*' />
                                 </Item>
@@ -149,44 +150,66 @@ class CreateTopic extends Component {
 
 
                             <View style={styles.bottomContainer}>
-                                <Button full style={styles.btnSaveDraft} onPress={() => {
+                                <Button disabled={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea} full style={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea ? styles.btnSaveDraftDisable : styles.btnSaveDraft} onPress={() => {
                                     //this.props.navigation.navigate('Guide')
-                                    AsyncStorage.clear();
+                                    this.setState({
+                                        loaderDraft: true
+                                    })
+                                   // AsyncStorage.clear();
+                                    const status = 'draft'
+                                    this.props.saveAsDraft(this.state.title, this.state.category, this.state.impact_level, this.state.desc_issue, this.state.desc_idea, status, (res, err) => {
+                                        if (res) {
+                                            this.setState({
+                                                loaderDraft: false
+                                            })
+                                            this.props.navigation.navigate('Draft')
+                                        } else {
+                                            console.log('error')
+                                        }
+                                    })
                                 }}>
-                                    <Text style={styles.txtSignIn}>Save Draft</Text>
+                                    {this.state.loaderDraft ? 
+                                    <MaterialIndicator
+                                        color="white"
+                                        size={25}
+                                        trackWidth={2}
+                                    /> : <Text style={styles.txtSignIn}>Save Draft</Text>}
+
                                 </Button>
 
-                                <Button disabled={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea} full style={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea? styles.btnSubmitDisable : styles.btnSubmit} onPress={() => {
+                                <Button disabled={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea} full style={!this.state.title || !this.state.category || !this.state.impact_level || !this.state.desc_issue || !this.state.desc_idea ? styles.btnSubmitDisable : styles.btnSubmit} onPress={() => {
                                     this.setState({
-                                        loader : true
+                                        loader: true
                                     })
-                                    this.props.createTopic(this.state.title , this.state.category , this.state.impact_level , this.state.desc_issue , this.state.desc_idea , (res, err)=>{
-                                     
-                                        if(res){
+                                    const pending = 'pending'
+                                    this.props.createTopic(this.state.title, this.state.category, this.state.impact_level, this.state.desc_issue, this.state.desc_idea, pending, (res, err) => {
+
+                                        if (res) {
+                                            console.log(res.emailTo, 'Email')
                                             this.setState({
                                                 loader: false
                                             })
-                                            this.props.navigation.navigate('EmailSent')
-                                        }else{
+                                            this.props.navigation.navigate('EmailSent', { emailTo: res.emailTo })
+                                        } else {
                                             this.setState({
                                                 loader: false,
                                             })
                                             console.log('Error')
                                         }
-                                       
+
                                     })
                                 }}>
-                                   {this.state.loader ? 
-                                   <MaterialIndicator
-                                   color="white"
-                                   size={25}
-                                   trackWidth={2}
-                               /> : 
-                               
-                               <Text style={styles.txtSignIn}>Submit</Text>
-                               }
+                                    {this.state.loader ?
+                                        <MaterialIndicator
+                                            color="white"
+                                            size={25}
+                                            trackWidth={2}
+                                        /> :
 
-                                   
+                                        <Text style={styles.txtSignIn}>Submit</Text>
+                                    }
+
+
                                 </Button>
                             </View>
 
@@ -257,7 +280,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    viewNote:{
+    viewNote: {
         marginTop: 20,
         marginLeft: 20,
         flexDirection: 'row',
@@ -274,16 +297,16 @@ const styles = StyleSheet.create({
     },
     txtNote: {
 
-        marginRight : 20,
-        fontWeight : '600',
+        marginRight: 20,
+        fontWeight: '600',
         color: '#737070',
         marginLeft: 20,
         fontSize: 12
     },
     txtdisclaimer: {
-        textAlign : 'center' ,
-        marginRight : 20,
-        fontWeight : '600',
+        textAlign: 'center',
+        marginRight: 20,
+        fontWeight: '600',
         color: '#737070',
         marginLeft: 20,
         fontSize: 12
@@ -391,33 +414,42 @@ const styles = StyleSheet.create({
         color: '#464646',
     },
     bottomContainer: {
-        flexDirection : 'row',
+        flexDirection: 'row',
         marginTop: 20,
         marginBottom: 20,
         justifyContent: 'space-between'
     },
     btnSaveDraft: {
-        width : width * 0.35,
+        width: width * 0.35,
         borderRadius: 10,
-        marginLeft :40,
-       //marginRight :40,
+        marginLeft: 40,
+        //marginRight :40,
         marginBottom: 10,
         backgroundColor: '#FDD62B',
 
     },
-    btnSubmit: {
-        width : width * 0.35,
+    btnSaveDraftDisable: {
+        width: width * 0.35,
         borderRadius: 10,
-       //marginLeft :40,
-       marginRight :40,
+        marginLeft: 40,
+        //marginRight :40,
+        marginBottom: 10,
+        backgroundColor: 'grey',
+
+    },
+    btnSubmit: {
+        width: width * 0.35,
+        borderRadius: 10,
+        //marginLeft :40,
+        marginRight: 40,
         marginBottom: 10,
         backgroundColor: '#FDD62B',
     },
     btnSubmitDisable: {
-        width : width * 0.35,
+        width: width * 0.35,
         borderRadius: 10,
-       //marginLeft :40,
-       marginRight :40,
+        //marginLeft :40,
+        marginRight: 40,
         marginBottom: 10,
         backgroundColor: 'grey',
 
@@ -427,28 +459,28 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#464646'
     },
-    addIcon:{
-        flexDirection : 'row',
+    addIcon: {
+        flexDirection: 'row',
         marginTop: 20,
         marginLeft: 40,
-        height : 75,
-        width : 75,
-        borderRadius : 10,
-        backgroundColor : '#C8C8C8',
+        height: 75,
+        width: 75,
+        borderRadius: 10,
+        backgroundColor: '#C8C8C8',
         justifyContent: 'center'
-    },plus:{
-        textAlign : 'center',
-        alignSelf : 'center',
-        fontSize : 24,
-        color : 'white'
+    }, plus: {
+        textAlign: 'center',
+        alignSelf: 'center',
+        fontSize: 24,
+        color: 'white'
     }
 })
 
 const mapStateToProps = state => {
     return {
         login: state.user.userLogin,
-        signInErr : state.user.signUperr
+        signInErr: state.user.signUperr
     };
 };
 
-export default connect(mapStateToProps, { createTopic })(CreateTopic);
+export default connect(mapStateToProps, { createTopic, saveAsDraft })(CreateTopic);

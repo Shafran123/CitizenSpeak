@@ -4,14 +4,32 @@ import { View, StyleSheet, Image, Dimensions, FlatList } from 'react-native'
 import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import { connect } from 'react-redux'
+import { MaterialIndicator } from 'react-native-indicators';
+
 
 
 const { height, width } = Dimensions.get('window');
 
 const data = ['1', '2']
 
+import { getTrendingTopics, getDevTopics } from '../../action';
+
+
 class Home extends Component {
 
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loaderTrending: false,
+      loaderDev: false
+
+
+
+    };
+  }
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -19,6 +37,27 @@ class Home extends Component {
     }
 
   };
+
+  componentDidMount() {
+    this.setState({
+      loaderTrending: true,
+      loaderDev: true
+    })
+
+    this.props.getDevTopics(() => {
+      this.setState({
+        loaderDev: false
+      })
+      console.log(this.props.devTopics, 'Dev Topics')
+    })
+
+    this.props.getTrendingTopics(() => {
+      this.setState({
+        loaderTrending: false
+      })
+      console.log(this.props.trendingTopics)
+    })
+  }
 
   render() {
     return (
@@ -59,35 +98,43 @@ class Home extends Component {
           </View>
 
           <View>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={data}
-              horizontal
-              renderItem={({ item, index }) => {
+            {this.state.loaderDev ? <View style={{ marginTop: 30 }}>
+              <MaterialIndicator
+                color="#FDD62C"
+                size={40}
+                trackWidth={2}
+              />
+            </View> :
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                data={this.props.devTopics}
+                horizontal
+                renderItem={({ item, index }) => {
 
-                return (
-                  <View style={styles.developmentCardView}>
-                    <Card style={styles.card}>
-                      <CardItem style={styles.cardItem}>
-                        <Body>
-                          <Text style={styles.cardHeading}>Smart Plant</Text>
-                          <Text style={styles.cardAuthor}>Idea By : Shafran</Text>
+                  return (
+                    <View style={styles.developmentCardView}>
+                      <Card style={styles.card}>
+                        <CardItem style={styles.cardItem}>
+                          <Body>
+                  <Text style={styles.cardHeading}>{item.title}</Text>
+                            <Text style={styles.cardAuthor}>Category : {item.category}</Text>
 
-                        </Body>
+                          </Body>
 
-                      </CardItem>
+                        </CardItem>
 
-                      <View style={styles.progressBar}>
+                        <View style={styles.progressBar}>
 
-                        <Text style={styles.txtProgressBar}>In Progress</Text>
+                  <Text style={styles.txtProgressBar}>{item.satus}</Text>
 
-                      </View>
-                    </Card>
-                  </View>
+                        </View>
+                      </Card>
+                    </View>
 
-                );
-              }}
-            />
+                  );
+                }}
+              />
+            }
           </View>
 
 
@@ -104,35 +151,46 @@ class Home extends Component {
 
 
           <View>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={data}
-              horizontal
-              renderItem={({ item, index }) => {
+            {this.state.loaderTrending ?
+              <View style={{ marginTop: 30 }}>
+                <MaterialIndicator
+                  color="#FDD62C"
+                  size={40}
+                  trackWidth={2}
+                />
+              </View>
 
-                return (
-                  <View style={styles.developmentCardView}>
-                    <Card style={styles.card}>
-                      <CardItem style={styles.cardItem}>
-                        <Body>
-                          <Text style={styles.cardHeading}>Recycle Plastic for better sri lanka</Text>
-                          <Text style={styles.cardAuthor}>Idea By : Shafran</Text>
+              :
+              <FlatList
+                showsHorizontalScrollIndicator={false}
+                data={this.props.trendingTopics}
+                horizontal
+                renderItem={({ item, index }) => {
 
-                        </Body>
+                  return (
+                    <View style={styles.developmentCardView}>
+                      <Card style={styles.card}>
+                        <CardItem style={styles.cardItem}>
+                          <Body>
+                            <Text style={styles.cardHeading}>{item.title}</Text>
+                            <Text style={styles.cardAuthor}>Category : {item.category}</Text>
 
-                      </CardItem>
+                          </Body>
 
-                      <View style={styles.progressBarIdea}>
+                        </CardItem>
 
-                        <Text style={styles.txtProgressBarIdea}>IDEA STAGE</Text>
+                        <View style={styles.progressBarIdea}>
 
-                      </View>
-                    </Card>
-                  </View>
+                          <Text style={styles.txtProgressBarIdea}>{item.satus}</Text>
 
-                );
-              }}
-            />
+                        </View>
+                      </Card>
+                    </View>
+
+                  );
+                }}
+              />
+            }
           </View>
 
           <View style={styles.titleHeader}>
@@ -251,6 +309,7 @@ const styles = StyleSheet.create({
     color: '#464646'
   },
   cardAuthor: {
+    marginTop: 5,
     fontSize: 12
   },
   progressBar: {
@@ -261,11 +320,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#2AC940'
   },
   txtProgressBar: {
+    textTransform: 'capitalize',
     textAlign: 'center',
     fontWeight: '700',
     color: 'white'
   },
   txtProgressBarIdea: {
+    textTransform: 'capitalize',
     textAlign: 'center',
     fontWeight: '700',
     color: '#464646'
@@ -295,11 +356,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#FDD62B',
   },
-  txtStartTopic:{
-    fontSize : 24,
-    color : '#464646',
-    fontWeight : '700'
+  txtStartTopic: {
+    fontSize: 24,
+    color: '#464646',
+    fontWeight: '700'
   }
 })
 
-export default Home;
+
+const mapStateToProps = state => {
+  return {
+    login: state.user.userLogin,
+    trendingTopics: state.user.trendingTopics,
+    devTopics: state.user.devTopics
+
+
+  };
+};
+
+export default connect(mapStateToProps, { getTrendingTopics, getDevTopics })(Home);

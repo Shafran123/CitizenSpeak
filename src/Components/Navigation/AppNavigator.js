@@ -15,6 +15,7 @@ import Guide from '../Guide/Guide'
 import Home from '../Home/Home'
 import CreateTopic from '../Home/CreateTopic'
 import EmailSent from '../Home/EmailSent'
+import Draft from '../Home/Draft'
 
 
 const AuthStack = createStackNavigator({
@@ -54,6 +55,7 @@ const AppStack = createStackNavigator({
   Home,
   CreateTopic,
   EmailSent,
+  Draft
 }, {
   defaultNavigationOptions: {
     headerStyle: {
