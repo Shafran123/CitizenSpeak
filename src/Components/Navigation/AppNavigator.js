@@ -21,6 +21,10 @@ import Draft from '../Home/Draft'
 
 import DrawerMenu from '../Home/DrawerMenu'
 
+//DrawerScreens
+import MyTopics from '../Drawer/MyTopics'
+import TopicDetail from '../Home/TopicDetail'
+
 
 const AuthStack = createStackNavigator({
   AuthMain,
@@ -57,7 +61,8 @@ const AppStack = createStackNavigator({
   //Screen Here
   CreateTopic,
   EmailSent,
-  Draft
+  Draft,
+
 }, {
   defaultNavigationOptions: {
     headerStyle: {
@@ -69,13 +74,43 @@ const AppStack = createStackNavigator({
   },
 });
 
-const DrawerStack = createDrawerNavigator({
-  Home,
-  
-},
+const MyTopicsSatck = createStackNavigator({
+  //Screen Here
+   MyTopics
+},{
+  defaultNavigationOptions: {
+    headerTitle: null,
+    headerStyle: {
+      backgroundColor: 'white',
+      shadowColor: 'transparent',
+      borderBottomWidth: 0,
+      elevation: 0,
+    },
+  },
+});
 
-  {
-    contentComponent: DrawerMenu
+const TopicDetalStack = createStackNavigator({
+  //Screen Here
+  TopicDetail
+},{
+  defaultNavigationOptions: {
+    headerTitle: null,
+    headerStyle: {
+      backgroundColor: 'white',
+      shadowColor: 'transparent',
+      borderBottomWidth: 0,
+      elevation: 0,
+    },
+  },
+});
+
+const DrawerStack = createDrawerNavigator({
+  //Home,
+  Home: {screen: Home},
+ // TopicDetail: {screen: TopicDetail},
+
+},{
+    contentComponent: DrawerMenu,
   })
 
 
@@ -86,7 +121,9 @@ export default createAppContainer(
       Home: DrawerStack,
       Auth: AuthStack,
       App: AppStack,
-      Guide : GuideStack
+      Guide : GuideStack,
+      MyTopics : MyTopicsSatck,
+      TopicDetail : TopicDetalStack
     },
 
     {

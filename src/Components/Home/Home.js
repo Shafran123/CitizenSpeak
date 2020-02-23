@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get('window');
 
 const data = ['1', '2']
 
-import { getTrendingTopics, getDevTopics } from '../../action';
+import { getTrendingTopics, getDevTopics , storeTopic } from '../../action';
 
 
 class Home extends Component {
@@ -61,14 +61,14 @@ class Home extends Component {
       this.setState({
         loaderDev: false
       })
-      console.log(this.props.devTopics, 'Dev Topics')
+     // console.log(this.props.devTopics, 'Dev Topics')
     })
 
     this.props.getTrendingTopics(() => {
       this.setState({
         loaderTrending: false
       })
-      console.log(this.props.trendingTopics)
+      //console.log(this.props.trendingTopics)
     })
   }
 
@@ -183,10 +183,17 @@ class Home extends Component {
                 showsHorizontalScrollIndicator={false}
                 data={this.props.trendingTopics}
                 horizontal
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
 
                   return (
-                    <View style={styles.developmentCardView}>
+                    <TouchableOpacity onPress={()=>{
+                      this.props.storeTopic(item,()=>{
+                        this.props.navigation.navigate('TopicDetail')
+                      })
+                   
+                    }}>
+                             <View style={styles.developmentCardView}>
                       <Card style={styles.card}>
                         <CardItem style={styles.cardItem}>
                           <Body>
@@ -204,6 +211,8 @@ class Home extends Component {
                         </View>
                       </Card>
                     </View>
+                    </TouchableOpacity>
+             
 
                   );
                 }}
@@ -392,4 +401,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, { getTrendingTopics, getDevTopics })(Home);
+export default connect(mapStateToProps, { getTrendingTopics, getDevTopics , storeTopic})(Home);

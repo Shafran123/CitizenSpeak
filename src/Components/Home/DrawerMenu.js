@@ -29,7 +29,7 @@ class DrawerMenu extends React.Component {
                 </View>
 
                 <TouchableOpacity onPress={()=>{
-                    console.log('hey')
+                    this.props.navigation.navigate('MyTopics')
                 }}>
                 <View style={{marginTop: 20 , marginLeft: 20, marginBottom: 20}}>
                     <Text style={{fontSize: 18}}>
