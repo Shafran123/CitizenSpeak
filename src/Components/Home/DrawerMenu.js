@@ -33,7 +33,7 @@ class DrawerMenu extends React.Component {
                 }}>
                 <View style={{marginTop: 20 , marginLeft: 20, marginBottom: 20}}>
                     <Text style={{fontSize: 18}}>
-                        My Ideas
+                        My Topics
                     </Text>
                 </View>
                 </TouchableOpacity>
