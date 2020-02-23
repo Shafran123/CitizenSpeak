@@ -5,7 +5,8 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-import { USER_LOGIN_SUCESS, USER_SIGNUP_FAIL, FETCH_TRENDING_SUCESS, FETCH_DEV_TOPIC_SUCESS, STORE_TOPIC_SUCESS , FETCH_AUTHOR_SUCESS} from '../action/config'
+import { USER_LOGIN_SUCESS, USER_SIGNUP_FAIL, FETCH_TRENDING_SUCESS, FETCH_DEV_TOPIC_SUCESS, STORE_TOPIC_SUCESS , FETCH_AUTHOR_SUCESS ,FETCH_PENDING_SUCESS} from '../action/config'
+
 
 var dbUsers = firestore().collection('Users')
 
@@ -144,6 +145,25 @@ export const getAuthor = (userId, callback) => async dispatch => {
     .then((res) => {
       console.log(res.data.data)
       dispatch({ type: FETCH_AUTHOR_SUCESS, payload: res.data.data })
+      callback()
+    }).catch(err => {
+      //callback(null, err)
+      console.log(err)
+    })
+
+} 
+
+export const fetchPendingTopics = (callback) => async dispatch =>{
+
+  const authToken = await firebase.auth().currentUser.getIdToken();
+  const user = firebase.auth().currentUser;
+
+  const userId = user.uid
+
+  axios.post(`${API_BASE_URL}firebase/get-pending`, {userId}, { headers: { authorization: `Bearer ${authToken}` } })
+    .then((res) => {
+      console.log(res.data.data)
+      dispatch({ type: FETCH_PENDING_SUCESS, payload: res.data.data })
       callback()
     }).catch(err => {
       //callback(null, err)
