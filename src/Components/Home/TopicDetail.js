@@ -71,7 +71,7 @@ class TopicDetail extends React.Component {
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, marginBottom: 10 }}>
                             <View style={styles.viewSubHeader}>
-                                <Text style={styles.txtSubHead}>Topic By : {this.props.author.FullName} </Text>
+                                <Text style={styles.txtSubHead}>Topic By : { this.props.author ? this.props.author.FullName : null} </Text>
                                 <Text style={styles.txtSubHead}>Submitted Date : </Text>
                             </View>
 
