@@ -3,9 +3,11 @@ import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'nativ
 import { View, Image, TouchableHighlight, StyleSheet, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { MaterialIndicator } from 'react-native-indicators';
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
 
 
-import { storeTopic, getAuthor } from '../../action';
+import { storeTopic, getAuthor, vote } from '../../action';
 
 
 class TopicDetail extends React.Component {
@@ -26,16 +28,39 @@ class TopicDetail extends React.Component {
     componentDidMount() {
 
         this.setState({
-            loader: true
+            loader: true,
+            voteEnable: true
         })
 
 
         this.props.getAuthor(this.props.details.uid, () => {
             this.setState({
-                loader: false
+                loader: false,
+       
             })
         })
-        console.log(this.props.details)
+        console.log(this.props.details.vote)
+
+        const user = firebase.auth().currentUser;
+
+        if(this.props.details.vote){
+            console.log('here')
+            this.props.details.vote.map((data)=>{
+                console.log(data.voteBy, 'voting details')
+                if(data.voteBy  === user.uid){
+                    console.log('cant vote')
+                    this.setState({
+                        voteEnable: false
+                    })
+                }
+            })
+        }else{
+            this.setState({
+                voteEnable: true
+            })
+        }
+  
+        
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -102,10 +127,11 @@ class TopicDetail extends React.Component {
 
                         </View>
 
-                        <Button full style={{ margin: 30, borderRadius: 10, backgroundColor: '#2AC940' }} onPress={() => {
+                        <Button disabled={!this.state.voteEnable} full style={{ margin: 30, borderRadius: 10, backgroundColor: '#2AC940' }} onPress={() => {
                             console.log('hey')
+                            this.props.vote(this.props.details.topic_Id)
                         }}>
-                            <Text style={{ fontSize: 20, fontWeight: '700' }}>Up Vote!</Text>
+                            <Text style={{ fontSize: 20, fontWeight: '700' }}>{this.state.voteEnable ? 'Up Vote!' : 'Up Voted!' } </Text>
                         </Button>
 
                         <View style={{ marginBottom: 10, marginLeft: 15, marginRight: 15, height: 1, backgroundColor: 'grey', opacity: 0.4 }}></View>
@@ -211,4 +237,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, { storeTopic, getAuthor })(TopicDetail);
+export default connect(mapStateToProps, { storeTopic, getAuthor , vote })(TopicDetail);

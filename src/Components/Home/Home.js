@@ -187,6 +187,7 @@ class Home extends Component {
                 renderItem={({ item, index }) => {
 
                   return (
+                    console.log(item , 'Item'),
                     <TouchableOpacity onPress={()=>{
                       this.props.storeTopic(item,()=>{
                         this.props.navigation.navigate('TopicDetail')

@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { Text, Item, Input, Textarea, Button, Card, CardItem, Body } from 'native-base'
 import { View , Image, TouchableHighlight} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 
 class DrawerMenu extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#FDD62B' }}>
-                <View style={{ marginTop: 30, marginLeft: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ marginTop: 40, marginLeft: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={{ fontSize: 20, fontWeight: '600', color: '#464646' }}>Shafran Naizer</Text>
                         <Text style={{ fontSize: 10 }}>Undergraduate NSBM Green University</Text>
@@ -81,7 +83,7 @@ class DrawerMenu extends React.Component {
                 <View style={{position: 'absolute' , bottom: 0 ,marginLeft: 20}}>
 
                 <TouchableOpacity onPress={()=>{
-                    console.log('hey')
+                   AsyncStorage.clear();
                 }}>
                 <View style={{marginBottom: 10}}>
                     <Text style={{fontSize: 14 , fontWeight: '800'}}>

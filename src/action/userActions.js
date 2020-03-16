@@ -10,7 +10,7 @@ import { USER_LOGIN_SUCESS, USER_SIGNUP_FAIL, FETCH_TRENDING_SUCESS, FETCH_DEV_T
 
 var dbUsers = firestore().collection('Users')
 
-const API_BASE_URL = 'https://d196e47e.ngrok.io/'
+const API_BASE_URL = 'https://97d45042.ngrok.io/'
 
 export const userLogin = (email, password, callback) => async dispatch => {
 
@@ -170,5 +170,23 @@ export const fetchPendingTopics = (callback) => async dispatch =>{
       console.log(err)
     })
 
+
+}
+
+export const vote = (topicId,callback) => async dispatch =>{
+
+  const authToken = await firebase.auth().currentUser.getIdToken();
+  const user = firebase.auth().currentUser;
+  const userId = user.uid
+  
+  axios.post(`${API_BASE_URL}firebase/vote`, {topicId , userId}, { headers: { authorization: `Bearer ${authToken}` } })
+    .then((res) => {
+      console.log('Voted')
+      //dispatch({ type: FETCH_PENDING_SUCESS, payload: res.data.data })
+      //callback()
+    }).catch(err => {
+      //callback(null, err)
+      console.log(err)
+    })
 
 }
